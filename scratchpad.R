@@ -64,4 +64,6 @@ psychdata_long %>%
   theme_classic() +
   theme(text = element_text(size = 14)) +
   theme(legend.position = "top") +
+  geom_hline(yintercept = 20, colour = "green", size = 1) + 
+  annotate("text", min(psychdata_long$time_num), x = 1, y = 20, vjust = 2, label = "Clinical cut-off") 
   anim_save("psychdata_anim_01.gif")

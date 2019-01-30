@@ -9,6 +9,7 @@ library(dplyr)
 psychdata
 gapminder
 
+# this is example from github gganimate
 plot <- ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
                geom_point(alpha = 0.7, show.legend = FALSE) +
                scale_colour_manual(values = country_colors) +
@@ -26,8 +27,9 @@ animation <- plot +
 
 animation
 
-# psychdata
+# this is me trying to do some animation with  psychdata
 
+# transform to long data
 psychdata_long <- psychdata %>% 
   gather(key = measure_time, value = value, -c(id, group)) %>%
   separate(measure_time, into = c("measure", "time"), sep = "_") %>% 
@@ -35,7 +37,9 @@ psychdata_long <- psychdata %>%
   mutate(time_point = case_when(time_point == "s" ~ "session",
                                 time_point == "fu" ~ "follow-up"),
          time_num = as.integer(time_num),
-         group = factor(group)) %>% 
+         group = factor(group),
+         group = case_when(group == 0 ~ "Group 1",
+                           group == 1 ~ "Group 2")) %>% 
   filter(time_point == "session")
 
 
@@ -58,5 +62,6 @@ psychdata_long %>%
   labs(x = "Session", y = "Measure", colour = NULL, shape = NULL) +
   # Make graph look APAish
   theme_classic() +
-  theme(text = element_text(size = 12)) +
-  theme(legend.position = "top")
+  theme(text = element_text(size = 14)) +
+  theme(legend.position = "top") +
+  anim_save("psychdata_anim_01.gif")

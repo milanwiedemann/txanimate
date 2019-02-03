@@ -76,7 +76,7 @@ sgdata_long <- sgdata %>%
     separate(time, into = c("time_point", "time_num"), sep = "(?<=[A-Za-z])(?=[0-9])") %>%
     mutate(time_point = case_when(time_point == "s" ~ "session",
                                   time_point == "fu" ~ "follow-up"),
-           time_num = as.integer(time_num),
+           time_num = as.integer(time_num)
            # group = factor(group),
            # group = case_when(group == 0 ~ "Group 1",
                              # group == 1 ~ "Group 2")
@@ -88,23 +88,25 @@ sgdata_long <- sgdata %>%
 sgdata_long %>% 
     ggplot(aes(x = time_num,
                y = value)) +
-    # Set group colours to colour-blind friendly colours
     scale_color_viridis_d(option = "D") +
-    # Add point for mean, dodge so the groups dont overlap
-    # Add lines between means, dodge so the groups dont overlap
     stat_summary(fun.y = mean, geom = "line", aes(group = 1), position = position_dodge(width = 0.5), size = 1, alpha = 1) +
-    transition_reveal(time_num) +
+      transition_reveal(time_num) +
     stat_summary(fun.y = mean, geom = "point", position = position_dodge(width = .5) , size = 3, alpha = 1) +
-    transition_reveal(time_num) +
+      transition_reveal(time_num) +
     geom_point(aes(group = seq_along(time_num)), alpha  = 0.3, size = .8, position = position_dodge(width = 0.5)) +
-    transition_reveal(time_num) +
-    # Change name of labels on x axis
+      transition_reveal(time_num) +
     labs(x = "Session", y = "Measure", colour = NULL, shape = NULL) +
-    # Make graph look APAish
     theme_classic() +
     theme(text = element_text(size = 14)) +
     theme(legend.position = "top") +
-    geom_hline(yintercept = 15, colour = "green", size = 1) +
-    annotate("text", x = 1, y = 15, vjust = 2, label = "Clinical cut-off")
+    geom_hline(yintercept = 40, colour = "red1", size = 1) +
+      annotate("text", x = 0, y = 40, vjust = -1, hjust = 0, colour = "red4", size = 5, label = "Extreme") +
+      annotate("text", x = 0, y = 40, vjust = 1.5, hjust = 0, colour = "red1", size = 5, label = "Severe") +
+    geom_hline(yintercept = 30, colour = "orangered1", size = 1) +
+      annotate("text", x = 0, y = 30, vjust = 1.5, hjust = 0, colour = "orangered1", size = 5, label = "Moderate") +
+    geom_hline(yintercept = 16, colour = "orange1", size = 1) +
+      annotate("text", x = 0, y = 16, vjust = 1.5, hjust = 0, colour = "orange1", size = 5,  label = "Mild") +
+    geom_hline(yintercept = 10, colour = "green", size = 1) +
+      annotate("text", x = 0, y = 10, vjust = 1.5, hjust = 0, colour = "green", size = 5, label = "Clinical cut-off")
     anim_save("sgdata_anim_01.gif")
   

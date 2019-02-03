@@ -5,6 +5,7 @@ library(gganimate)
 library(tidyr)
 library(stringr)
 library(dplyr)
+library(suddengains)
 
 psychdata
 gapminder
@@ -65,5 +66,45 @@ psychdata_long %>%
   theme(text = element_text(size = 14)) +
   theme(legend.position = "top") +
   geom_hline(yintercept = 20, colour = "green", size = 1) + 
-  annotate("text", min(psychdata_long$time_num), x = 1, y = 20, vjust = 2, label = "Clinical cut-off") 
+  annotate("text", min(psychdata_long$time_num), x = 1, y = 20, vjust = 2, label = "Clinical cut-off") +
   anim_save("psychdata_anim_01.gif")
+
+  
+sgdata_long <- sgdata %>% 
+    gather(key = measure_time, value = value, -c(id)) %>%
+    separate(measure_time, into = c("measure", "time"), sep = "_") %>% 
+    separate(time, into = c("time_point", "time_num"), sep = "(?<=[A-Za-z])(?=[0-9])") %>%
+    mutate(time_point = case_when(time_point == "s" ~ "session",
+                                  time_point == "fu" ~ "follow-up"),
+           time_num = as.integer(time_num),
+           # group = factor(group),
+           # group = case_when(group == 0 ~ "Group 1",
+                             # group == 1 ~ "Group 2")
+           ) %>% 
+    filter(time_point == "session")
+
+
+  
+sgdata_long %>% 
+    ggplot(aes(x = time_num,
+               y = value)) +
+    # Set group colours to colour-blind friendly colours
+    scale_color_viridis_d(option = "D") +
+    # Add point for mean, dodge so the groups dont overlap
+    # Add lines between means, dodge so the groups dont overlap
+    stat_summary(fun.y = mean, geom = "line", aes(group = 1), position = position_dodge(width = 0.5), size = 1, alpha = 1) +
+    transition_reveal(time_num) +
+    stat_summary(fun.y = mean, geom = "point", position = position_dodge(width = .5) , size = 3, alpha = 1) +
+    transition_reveal(time_num) +
+    geom_point(aes(group = seq_along(time_num)), alpha  = 0.3, size = .8, position = position_dodge(width = 0.5)) +
+    transition_reveal(time_num) +
+    # Change name of labels on x axis
+    labs(x = "Session", y = "Measure", colour = NULL, shape = NULL) +
+    # Make graph look APAish
+    theme_classic() +
+    theme(text = element_text(size = 14)) +
+    theme(legend.position = "top") +
+    geom_hline(yintercept = 15, colour = "green", size = 1) +
+    annotate("text", x = 1, y = 15, vjust = 2, label = "Clinical cut-off")
+    anim_save("sgdata_anim_01.gif")
+  

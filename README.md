@@ -5,8 +5,8 @@ Might be useful for conference presentations so that the audience doesn't fall a
 
 ## Idea 1: Two groups
 
-![First idea, two groups](psychdata_anim_01.gif)
+![First idea, two groups](sgdata_anim_01.gif)
 
 ## Idea 2: Clinical cut-offs
 
-![Second idea, Clinical cut-offs](sgdata_anim_01.gif)
+![Second idea, Clinical cut-offs](psychdata_anim_01.gif)

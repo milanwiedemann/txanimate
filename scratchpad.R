@@ -1,3 +1,4 @@
+# devtools::install_github("milanwiedemann/psychdata")
 library(psychdata)
 library(gapminder)
 library(ggplot2)
@@ -10,7 +11,7 @@ library(suddengains)
 psychdata
 gapminder
 
-# this is example from github gganimate
+# this is example from github gganimate ----
 plot <- ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
                geom_point(alpha = 0.7, show.legend = FALSE) +
                scale_colour_manual(values = country_colors) +
@@ -30,6 +31,7 @@ animation
 
 # this is me trying to do some animation with  psychdata
 
+# Idea 1 ----
 # transform to long data
 psychdata_long <- psychdata %>% 
   gather(key = measure_time, value = value, -c(id, group)) %>%
@@ -70,6 +72,7 @@ psychdata_long %>%
   annotate("text", min(psychdata_long$time_num), x = 1, y = 20, vjust = 2, label = "Clinical cut-off") +
   anim_save("psychdata_anim_01.gif")
 
+# Animation  Idea 2
   
 sgdata_long <- sgdata %>% 
     gather(key = measure_time, value = value, -c(id)) %>%
